@@ -277,4 +277,18 @@ public class VaultTransitTemplateIntegrationTests extends IntegrationTestSupport
 		String rewrapped = transitOperations.rewrap("mykey", ciphertext, transitRequest);
 		assertThat(rewrapped).startsWith("vault:v2");
 	}
+
+	@Test(expected = VaultException.class)
+	public void decryptWithVersionTooLowShouldFail() {
+
+		transitOperations.createKey("mykey");
+
+		String ciphertext = transitOperations.encrypt("mykey", "hello-world");
+		transitOperations.rotate("mykey");
+		transitOperations.configureKey("mykey", VaultTransitKeyConfiguration.builder()
+				.minDecryptionVersion(2).build());
+
+		String plaintext = transitOperations.decrypt("mykey", ciphertext);
+	}
+
 }

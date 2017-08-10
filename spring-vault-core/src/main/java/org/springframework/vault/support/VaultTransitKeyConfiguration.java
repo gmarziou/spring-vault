@@ -34,11 +34,23 @@ public class VaultTransitKeyConfiguration {
 	@Nullable
 	private final Integer latestVersion;
 
+	@JsonProperty("min_decryption_version")
+	@Nullable
+	private final Integer minDecryptionVersion;
+
+	@JsonProperty("min_encryption_version")
+	@Nullable
+	private final Integer minEncryptionVersion;
+
 	private VaultTransitKeyConfiguration(@Nullable Boolean deletionAllowed,
-			@Nullable Integer latestVersion) {
+										 @Nullable Integer latestVersion,
+										 @Nullable Integer minDecryptionVersion,
+										 @Nullable Integer minEncryptionVersion) {
 
 		this.deletionAllowed = deletionAllowed;
 		this.latestVersion = latestVersion;
+		this.minDecryptionVersion = minDecryptionVersion;
+		this.minEncryptionVersion = minEncryptionVersion;
 	}
 
 	/**
@@ -65,6 +77,22 @@ public class VaultTransitKeyConfiguration {
 	}
 
 	/**
+	 * @return minimum version of the key that can be used to decrypt
+	 */
+	@Nullable
+	public Integer getMinDecryptionVersion() {
+		return minDecryptionVersion;
+	}
+
+	/**
+	 * @return minimum version of the key that can be used to encrypt
+	 */
+	@Nullable
+	public Integer getMinEncryptionVersion() {
+		return minEncryptionVersion;
+	}
+
+	/**
 	 * Builder for {@link VaultTransitKeyConfiguration}.
 	 */
 	public static class VaultTransitKeyConfigurationBuilder {
@@ -74,6 +102,12 @@ public class VaultTransitKeyConfiguration {
 
 		@Nullable
 		private Integer latestVersion;
+
+		@Nullable
+		private Integer minDecryptionVersion;
+
+		@Nullable
+		private Integer minEncryptionVersion;
 
 		VaultTransitKeyConfigurationBuilder() {
 		}
@@ -101,12 +135,34 @@ public class VaultTransitKeyConfiguration {
 		}
 
 		/**
+		 * Set the minimum version of the key that can be used to decrypt.
+		 *
+		 * @param minDecryptionVersion key version.
+		 * @return {@code this} {@link VaultTransitKeyConfigurationBuilder}.
+		 */
+		public VaultTransitKeyConfigurationBuilder minDecryptionVersion(int minDecryptionVersion) {
+			this.minDecryptionVersion = minDecryptionVersion;
+			return this;
+		}
+
+		/**
+		 * Set the minimum version of the key that can be used to encrypt.
+		 *
+		 * @param minEncryptionVersion key version.
+		 * @return {@code this} {@link VaultTransitKeyConfigurationBuilder}.
+		 */
+		public VaultTransitKeyConfigurationBuilder minEncryptionVersion(int minEncryptionVersion) {
+			this.minEncryptionVersion = minEncryptionVersion;
+			return this;
+		}
+
+		/**
 		 * Build a new {@link VaultTransitKeyConfiguration} instance.
 		 *
 		 * @return a new {@link VaultTransitKeyConfiguration}.
 		 */
 		public VaultTransitKeyConfiguration build() {
-			return new VaultTransitKeyConfiguration(deletionAllowed, latestVersion);
+			return new VaultTransitKeyConfiguration(deletionAllowed, latestVersion, minDecryptionVersion, minEncryptionVersion);
 		}
 	}
 }
